@@ -3,6 +3,7 @@ package com.test.ems.service.implementation;
 
 import com.test.ems.dto.EmployeeDto;
 import com.test.ems.entity.Employee;
+import com.test.ems.exceptions.ResourceNotFoundException;
 import com.test.ems.mappers.EmployeeMapper;
 import com.test.ems.repository.EmployeeRepository;
 import com.test.ems.service.EmployeeService;
@@ -19,5 +20,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
         Employee savedEmployee = employeeRepository.save(employee);
         return EmployeeMapper.mapToEmployeeDto(savedEmployee);
+    }
+
+    @Override
+    public EmployeeDto getEmployeeById(Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(()-> new ResourceNotFoundException("Employee does not exist with given id:" + employeeId));
+
+        return EmployeeMapper.mapToEmployeeDto(employee);
     }
 }
